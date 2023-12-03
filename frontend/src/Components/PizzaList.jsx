@@ -1,5 +1,17 @@
 import React, { useState } from "react";
 
+import {
+  TextField,
+  Button,
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  IconButton,
+} from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
+
 const PizzaList = ({ name, data, onCreate, onUpdate, onDelete, error }) => {
   const [formData, setFormData] = useState({
     id: "",
@@ -24,7 +36,7 @@ const PizzaList = ({ name, data, onCreate, onUpdate, onDelete, error }) => {
     } else {
       onCreate(formData);
     }
-    setFormData({ id: "", name: "", description: "" });
+    setFormData({ name: "", description: "" });
   };
 
   const handleEdit = (item) => {

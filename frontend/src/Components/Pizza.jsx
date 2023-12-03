@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 // imports
 import PizzaList from "./PizzaList";
@@ -7,54 +8,53 @@ const term = "Pizza";
 
 const Pizza = () => {
   const [data, setData] = useState([]);
-  const [maxId, setMaxId] = useState(0);
 
   useEffect(() => {
     fetchPizzaData();
   }, []);
 
-  const fetchPizzaData = () => {
-    // Simulate fetching data from API
-    const pizzaData = [
-      {
-        id: 1,
-        name: "Margherita",
-        description: "Tomato sauce, mozzarella, and basil",
-      },
-      {
-        id: 2,
-        name: "Pepperoni",
-        description: "Tomato sauce, mozzarella, and pepperoni",
-      },
-      {
-        id: 3,
-        name: "Hawaiian",
-        description: "Tomato sauce, mozzarella, ham, and pineapple",
-      },
-    ];
-    setData(pizzaData);
-    setMaxId(Math.max(...pizzaData.map((pizza) => pizza.id)));
+  const fetchPizzaData = async () => {
+    try {
+      let respone = await axios.get(`https://localhost:5023/api/pizza`);
+      setData(respone.data);
+    } catch (error) {
+      console.warn("Error in fetchPizzaData, Pizza.jsx", error);
+    }
   };
 
-  const handleCreate = (item) => {
-    // Simulate creating item on API
-    const newItem = { ...item, id: data.length + 1 };
-    setData([...data, newItem]);
-    setMaxId(maxId + 1);
+  const handleCreate = async (item) => {
+    try {
+      const response = await axios.post(
+        "https://localhost:5023/api/pizza",
+        item
+      );
+    } catch (error) {
+      console.warn("Error in handleUpdate a new Pizza, in Pizza.jsx", error);
+    }
   };
 
-  const handleUpdate = (item) => {
-    // Simulate updating item on API
-    const updatedData = data.map((pizza) =>
-      pizza.id === item.id ? item : pizza
-    );
-    setData(updatedData);
+  const handleUpdate = async (item) => {
+    try {
+      const response = await axios.put(
+        `https://localhost:5023/api/pizza/${item.id}`,
+        item
+      );
+    } catch (error) {
+      console.warn(
+        "Error in handleUpdate an existing pizza, in Pizza.jsx",
+        error
+      );
+    }
   };
 
-  const handleDelete = (id) => {
-    // Simulate deleting item on API
-    const updatedData = data.filter((pizza) => pizza.id !== id);
-    setData(updatedData);
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(
+        `https://localhost:5023/api/pizza/${id}`
+      );
+    } catch (error) {
+      console.warn("Error in handleDelete Pizza by id, in Pizza.jsx", error);
+    }
   };
 
   return (
